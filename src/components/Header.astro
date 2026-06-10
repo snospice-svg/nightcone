@@ -1,0 +1,24 @@
+---
+const { active } = Astro.props;
+const links = [
+  { href: '/', label: 'Home', key: 'home' },
+  { href: '/#matrix', label: 'The Matrix', key: 'matrix' },
+  { href: '/#experiments', label: 'Experiments', key: 'experiments' },
+  { href: '/journal/', label: 'Journal', key: 'journal' },
+  { href: '/faq/', label: 'FAQ', key: 'faq' },
+  { href: '/contact/', label: 'Contact', key: 'contact' },
+];
+---
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg class="mk" aria-hidden="true"><use href="#mark" /></svg>
+      <span class="wordmark">Nightcone<small>LABS</small></span>
+    </a>
+    <nav class="main">
+      {links.map((l) => (
+        <a href={l.href} class={active === l.key ? 'active' : undefined}>{l.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>

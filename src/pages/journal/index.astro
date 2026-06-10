@@ -1,0 +1,101 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('journal')).filter((p) => !p.data.draft);
+posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const fmt = (d: Date) => d.toISOString().slice(0, 10);
+---
+<Base active="journal" title="Journal — Nightcone Labs" description="Entries, field notes, null results, and periodic matrix updates from ongoing oneirogen research.">
+
+  <div class="hero" style="padding:72px 0 40px">
+    <div class="wrap">
+      <h1>The journal.</h1>
+      <p class="lede" style="max-width:56ch">Entries, field notes, null results, and periodic matrix updates. The long-form record behind the short-form clips.</p>
+    </div>
+  </div>
+
+  <section style="padding-top:16px">
+    <div class="wrap" style="max-width:780px">
+
+      <!-- Filter bar is built by the script below from each post's data-tags. -->
+      <div class="tag-bar" id="tagBar" aria-label="Filter posts by tag"></div>
+
+      <div id="postList">
+        {posts.map((p) => (
+          <article class="post-row" data-tags={p.data.tags.join(' ')}>
+            <div class="post-meta">
+              <span class="kind">{p.data.kind}</span>
+              <time datetime={fmt(p.data.date)}>{fmt(p.data.date)}</time>
+            </div>
+            <h3><a href={`/journal/${p.id}/`}>{p.data.title}</a></h3>
+            <p class="muted">{p.data.summary}</p>
+            <div class="post-tags">
+              {p.data.tags.map((t) => (
+                <button type="button" class="tag chip" data-tag={t}>{t.replace(/-/g, ' ')}</button>
+              ))}
+            </div>
+            <a class="readlink" href={`/journal/${p.id}/`}>Read entry →</a>
+          </article>
+        ))}
+      </div>
+
+      <p class="form-status" id="emptyState" style="display:none">No entries with that tag.</p>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      var posts = Array.prototype.slice.call(document.querySelectorAll('#postList .post-row'));
+      var bar = document.getElementById('tagBar');
+      var empty = document.getElementById('emptyState');
+      if (!bar) return;
+      var active = 'all';
+
+      var set = {};
+      posts.forEach(function (p) {
+        (p.getAttribute('data-tags') || '').split(/\s+/).filter(Boolean).forEach(function (t) { set[t] = true; });
+      });
+      var tags = Object.keys(set).sort();
+
+      function btn(label, tag) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'tag-filter' + (tag === active ? ' on' : '');
+        b.textContent = label;
+        b.setAttribute('data-tag', tag);
+        return b;
+      }
+
+      bar.appendChild(btn('All', 'all'));
+      tags.forEach(function (t) { bar.appendChild(btn(t.replace(/-/g, ' '), t)); });
+
+      function apply(tag) {  // eslint-disable-line
+        active = tag;
+        var shown = 0;
+        posts.forEach(function (p) {
+          var has = tag === 'all' || (' ' + (p.getAttribute('data-tags') || '') + ' ').indexOf(' ' + tag + ' ') !== -1;
+          p.style.display = has ? '' : 'none';
+          if (has) shown++;
+        });
+        if (empty) empty.style.display = shown ? 'none' : 'block';
+        Array.prototype.forEach.call(bar.querySelectorAll('.tag-filter'), function (b) {
+          b.classList.toggle('on', b.getAttribute('data-tag') === tag);
+        });
+      }
+
+      apply('all');
+
+      bar.addEventListener('click', function (e) {
+        var b = e.target.closest('.tag-filter');
+        if (b) apply(b.getAttribute('data-tag'));
+      });
+      document.getElementById('postList').addEventListener('click', function (e) {
+        var chip = e.target.closest('.chip');
+        if (chip) { e.preventDefault(); apply(chip.getAttribute('data-tag')); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      });
+    })();
+  </script>
+
+</Base>

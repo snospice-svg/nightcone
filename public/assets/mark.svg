@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" role="img" aria-label="Nightcone Labs mark">
+  <g fill="none" stroke="currentColor" stroke-width="3">
+    <!-- top filled cone (apex down) -->
+    <path d="M70 70 L150 150 L230 70 Z" fill="currentColor" stroke="none"/>
+    <!-- top rim dashed ellipse -->
+    <ellipse cx="150" cy="70" rx="80" ry="18" fill="none" stroke="#F4F1EA" stroke-width="3" stroke-dasharray="6 7"/>
+    <!-- threshold line -->
+    <line x1="35" y1="150" x2="265" y2="150" stroke="currentColor" stroke-width="3"/>
+    <!-- bottom outline cone (apex up) -->
+    <path d="M95 235 L150 150 L205 235" fill="none" stroke="currentColor" stroke-width="3"/>
+    <!-- bottom base ellipse -->
+    <ellipse cx="150" cy="235" rx="55" ry="16" fill="none" stroke="currentColor" stroke-width="3"/>
+    <!-- vertical dashed axis -->
+    <line x1="150" y1="55" x2="150" y2="250" stroke="currentColor" stroke-width="3" stroke-dasharray="7 8"/>
+  </g>
+</svg>

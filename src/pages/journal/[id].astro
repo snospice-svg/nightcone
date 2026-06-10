@@ -1,0 +1,40 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('journal')).filter((p) => !p.data.draft);
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const d = post.data;
+const fmt = (x: Date) => x.toISOString().slice(0, 10);
+---
+<Base active="journal" title={`${d.title} — Nightcone Labs`} description={d.summary}>
+  <section>
+    <div class="wrap" style="max-width:760px">
+      <a class="backlink" href="/journal/">← All entries</a>
+
+      <div class="detail-head">
+        <div class="post-meta">
+          <span class="kind">{d.kind}</span>
+          <time datetime={fmt(d.date)}>{fmt(d.date)}</time>
+        </div>
+        <h1 style="font-size:clamp(30px,5vw,46px)">{d.title}</h1>
+        <div style="margin-top:6px">
+          {d.tags.map((t) => (
+            <a class="tag chip" href={`/journal/?tag=${t}`}>{t.replace(/-/g, ' ')}</a>
+          ))}
+        </div>
+      </div>
+
+      <article class="prose">
+        <Content />
+      </article>
+
+      <p class="muted" style="margin-top:40px;font-size:15px"><strong>Not medical advice.</strong> Nightcone documents self-experimentation for research interest only. Nothing here is a recommendation to ingest any substance.</p>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,44 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const items = (await getCollection('experiments')).filter((e) => !e.data.draft);
+  return items.map((item) => ({ params: { id: item.id }, props: { item } }));
+}
+
+const { item } = Astro.props;
+const { Content } = await render(item);
+const d = item.data;
+const pad = (n: number) => String(n).padStart(3, '0');
+const score = (n: number | null) => (n === null || n === undefined ? '—' : `${n} / 5`);
+---
+<Base active="experiments" title={`${d.title} — Nightcone Labs`} description={d.summary}>
+  <section>
+    <div class="wrap" style="max-width:760px">
+      <a class="backlink" href="/#experiments">← All experiments</a>
+
+      <div class="detail-head">
+        <p class="eyebrow" style="margin-bottom:14px">Entry {pad(d.entry)}{d.meta ? ` · ${d.meta}` : ''}</p>
+        <h1 style="font-size:clamp(32px,5vw,48px)">{d.title}</h1>
+        <div class="scores">
+          <span>Dose <b>{d.dose}</b></span>
+          <span>Protocol <b>{d.protocol}</b></span>
+          <span>Recall <b>{score(d.recall)}</b></span>
+          <span>Lucidity <b>{score(d.lucidity)}</b></span>
+        </div>
+        <div style="margin-top:6px">
+          {d.tags.map((t, i) => (
+            <span class={'tag' + (d.nullResult && i === 0 ? ' null' : '')}>{t.replace(/-/g, ' ')}</span>
+          ))}
+        </div>
+      </div>
+
+      <article class="prose">
+        <Content />
+      </article>
+
+      <p class="muted" style="margin-top:40px;font-size:15px"><strong>Not medical advice.</strong> Single-subject self-experimentation reported for research interest. Nothing here is a recommendation to ingest any substance.</p>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,163 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+// Pull every experiment, drop drafts, newest entry first.
+const all = (await getCollection('experiments')).filter((e) => !e.data.draft);
+all.sort((a, b) => b.data.entry - a.data.entry);
+
+// The "Oneirogens tested" figure is derived from the collection length.
+const count = all.length;
+
+const pad = (n: number) => String(n).padStart(3, '0');
+const score = (n: number | null) => (n === null || n === undefined ? '—' : `${n}/5`);
+---
+<Base active="home">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="wrap">
+      <svg class="mk-big" aria-hidden="true" viewBox="0 0 300 300">
+        <text x="150" y="42" text-anchor="middle" class="cone-label">DREAM</text>
+        <path d="M70 70 L150 150 L230 70 Z" fill="currentColor" />
+        <ellipse cx="150" cy="70" rx="80" ry="18" fill="none" stroke="#F4F1EA" stroke-width="3" stroke-dasharray="6 7" />
+        <line x1="35" y1="150" x2="265" y2="150" stroke="currentColor" stroke-width="3" />
+        <text x="276" y="146" class="cone-label thr">THRESHOLD</text>
+        <path d="M95 235 L150 150 L205 235" fill="none" stroke="currentColor" stroke-width="3" />
+        <ellipse cx="150" cy="235" rx="55" ry="16" fill="none" stroke="currentColor" stroke-width="3" />
+        <line x1="150" y1="55" x2="150" y2="250" stroke="currentColor" stroke-width="3" stroke-dasharray="7 8" />
+        <text x="150" y="278" text-anchor="middle" class="cone-label">WAKE</text>
+      </svg>
+      <h1>A field observatory for the dreaming mind.</h1>
+      <p class="lede">Nightcone Labs runs structured, single-variable experiments on oneirogens — compounds reported to alter dreams — and publishes what actually changes. Including the nights nothing does.</p>
+      <div class="cta-row">
+        <a class="btn solid" href="#matrix">Read the matrix</a>
+        <a class="btn ghost" href="#experiments">See the experiments</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAT -->
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="stats stats-single">
+        <div class="cell"><div class="num">{count}</div><div class="lab">Oneirogens tested</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="wrap">
+      <p class="eyebrow">The project</p>
+      <h2>A 19th-century naturalist's field observatory, studying a 21st-century subject.</h2>
+      <p>Dreaming is one of the last common human experiences that remains poorly instrumented. We sleep, something happens, and most of it is gone by breakfast. A long folk and ethnobotanical tradition claims that certain plants and compounds — <em>oneirogens</em> — can change that: sharpen recall, intensify the imagery, occasionally tip a sleeper into lucidity. The clinical literature, by contrast, is thin. A handful of controlled trials, a great deal of anecdote, and very few clean answers.</p>
+      <p>Nightcone exists in that gap. The premise is simple and deliberately unglamorous: take one compound at a time, hold the protocol fixed, run it for long enough to separate signal from a noisy baseline, and record the result whether or not it's interesting. The instrument is what Nightcone shows. The tradition — oneirogens, dream practice, the divination cultures that named these plants — is what it studies. The biohackers, sleep nerds, and dream-curious are who it speaks to.</p>
+      <p>This is not a wellness brand and not a supplement shop. There is nothing to buy here. The output is a growing public record: a matrix of compounds, doses, protocols, and outcomes that compounds over time into something more useful than any single night.</p>
+    </div>
+  </section>
+
+  <!-- PRINCIPLES -->
+  <section id="principles">
+    <div class="wrap">
+      <p class="eyebrow">How the work is run</p>
+      <h2>Method before narrative.</h2>
+      <div class="grid2" style="margin-top:34px">
+        <div class="principle">
+          <h3>One variable at a time</h3>
+          <p>No stacking, no behavioural techniques layered in, no dream journaling unless it's the thing being tested. Isolate the chemical first. If an effect appears, it should be attributable to one input.</p>
+        </div>
+        <div class="principle">
+          <h3>The 14-night standard</h3>
+          <p>Most protocols run fourteen consecutive nights at a fixed dose and fixed timing, with a washout when relevant. Dreams vary wildly night to night; a single trial proves almost nothing. We watch for build-up effects versus acute ones.</p>
+        </div>
+        <div class="principle">
+          <h3>Null results are results</h3>
+          <p>Most things, tested honestly, don't do much. Compounds that produce nothing get the same write-up as the ones that work. A documented non-effect saves the next person fourteen nights.</p>
+        </div>
+        <div class="principle">
+          <h3>Mechanism stays hypothesis-level</h3>
+          <p>Where a pathway is plausible — cholinergic compounds and REM, for instance — we say so and say it's unproven. We don't invent mechanisms, and we don't promise outcomes the evidence can't support.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MATRIX (generated from experiments) -->
+  <section id="matrix">
+    <div class="wrap">
+      <p class="eyebrow">The matrix</p>
+      <h2>The central, cumulative artifact.</h2>
+      <p class="muted" style="max-width:62ch">Every compound experiment is a row. Recall and lucidity are scored 0–5 against the experimenter's own baseline — subjective, single-subject, and explicitly so. The matrix is the point; individual videos are just how each row gets reported.</p>
+      <div class="matrix-shell" style="margin-top:26px">
+        <table class="matrix">
+          <thead>
+            <tr><th>Entry</th><th>Substance</th><th>Dose</th><th>Protocol</th><th>Recall</th><th>Lucidity</th><th class="notes">Notes</th></tr>
+          </thead>
+          <tbody>
+            {all.map((e) => (
+              <tr>
+                <td class="ent">{pad(e.data.entry)}</td>
+                <td><a href={`/experiments/${e.id}/`}>{e.data.title}</a></td>
+                <td set:html={e.data.dose.replace(/ /g, '&nbsp;')} />
+                <td>{e.data.protocol}</td>
+                <td>{score(e.data.recall)}</td>
+                <td>{score(e.data.lucidity)}</td>
+                <td class="notes">{e.data.summary}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="matrix-cap">Scores are subjective and single-subject. The matrix grows with every entry.</p>
+    </div>
+  </section>
+
+  <!-- EXPERIMENTS (generated from experiments) -->
+  <section id="experiments">
+    <div class="wrap">
+      <p class="eyebrow">Experiments in detail</p>
+      <h2>What's been tested, and what it suggested.</h2>
+      <div style="margin-top:30px">
+        {all.map((e) => (
+          <div class="exp">
+            <div class="exp-head">
+              <h3><a href={`/experiments/${e.id}/`}>{e.data.title}</a></h3>
+              {e.data.meta && <span class="meta">{e.data.meta}</span>}
+            </div>
+            <p>{e.data.summary}</p>
+            {e.data.tags.map((t, i) => (
+              <span class={'tag' + (e.data.nullResult && i === 0 ? ' null' : '')}>{t.replace(/-/g, ' ')}</span>
+            ))}
+          </div>
+        ))}
+      </div>
+      <p class="muted" style="margin-top:24px">Full write-ups and the running video record live on the <a href="https://www.youtube.com/@nightcone_labs" target="_blank" rel="noopener">YouTube</a> and <a href="https://www.tiktok.com/@nightcone_labs" target="_blank" rel="noopener">TikTok</a> channels. Each clip is one matrix row, reported as data.</p>
+    </div>
+  </section>
+
+  <!-- COMMITMENTS -->
+  <section id="commitments">
+    <div class="wrap">
+      <p class="eyebrow">Where we stand</p>
+      <h2>Commitments &amp; what's ruled out.</h2>
+      <div class="grid2" style="margin-top:30px">
+        <div>
+          <h3>We commit to</h3>
+          <p class="muted">Publishing null and ambiguous findings transparently. Mechanism-forward framing over dosage-forward. Treating the matrix as a compounding public artifact. Restraint as a stance, not an afterthought.</p>
+        </div>
+        <div>
+          <h3>Ruled out</h3>
+          <p class="muted">Mysticism and wellness softness. Hype marketing and guaranteed outcomes. Stacking recommendations. Anything sold as a cure. This is a record, not a product.</p>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:30px;font-size:15px"><strong>Not medical advice.</strong> Nightcone documents self-experimentation for research interest. Compounds discussed can carry real toxicity and interaction risks. Nothing here is a recommendation to ingest anything.</p>
+      <div class="cta-row" style="justify-content:flex-start;margin-top:30px">
+        <a class="btn solid" href="/journal/">Read the journal</a>
+        <a class="btn ghost" href="/faq/">Read the FAQ</a>
+        <a class="btn ghost" href="/contact/">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+</Base>
