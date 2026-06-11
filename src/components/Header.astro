@@ -14,6 +14,7 @@ const links = [
     <a class="brand" href="/">
       <img class="brand-logo" src="/assets/nightcone_rectangular_logo.png" alt="Nightcone Labs" style="height:40px;width:auto;display:block;mix-blend-mode:multiply" />
     </a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <nav class="main">
       {links.map((l) => (
         <a href={l.href} class={active === l.key ? 'active' : undefined}>{l.label}</a>
@@ -21,3 +22,15 @@ const links = [
     </nav>
   </div>
 </header>
+
+<script>
+  (function () {
+    var btn = document.querySelector('.nav-toggle');
+    var head = document.querySelector('.site-head');
+    if (!btn || !head) return;
+    btn.addEventListener('click', function () {
+      var open = head.classList.toggle('nav-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  })();
+</script>
