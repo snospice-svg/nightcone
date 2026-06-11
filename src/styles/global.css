@@ -180,3 +180,20 @@ table.matrix a{color:var(--bone);text-decoration:none;border-bottom:1px solid rg
   .site-head .wrap{justify-content:center}
   section{padding:48px 0}
 }
+
+
+/* ---------- mobile nav / hamburger ---------- */
+.nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:42px;height:42px;padding:0;background:none;border:0;cursor:pointer}
+.nav-toggle span{display:block;width:22px;height:2px;background:var(--ink);margin:0 auto;transition:transform .2s,opacity .2s}
+.site-head{position:relative}
+.site-head.nav-open .nav-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.site-head.nav-open .nav-toggle span:nth-child(2){opacity:0}
+.site-head.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media(max-width:720px){
+  .nav-toggle{display:flex}
+  .site-head .wrap{justify-content:space-between}
+  nav.main{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;background:var(--bone);border-bottom:1px solid var(--ink-12);padding:6px 0;z-index:50}
+  .site-head.nav-open nav.main{display:flex}
+  nav.main a{padding:13px 28px}
+  nav.main a:hover,nav.main a.active{border-bottom:none;color:var(--ink)}
+}
