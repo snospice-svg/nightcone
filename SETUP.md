@@ -68,7 +68,7 @@ The post shows up on `/journal/`, its tags join the filter bar automatically, an
 
 ## Contact form (one-time setup)
 
-The contact page posts to **[Web3Forms](https://web3forms.com)** — no backend, no email address in the page. Register **brett@nightcone.co** there, copy the access key they email you, and paste it into `src/pages/contact.astro` in place of `REPLACE_WITH_WEB3FORMS_ACCESS_KEY`. Until then the form says "not configured yet." The key is safe to commit publicly.
+The contact page posts to **[Web3Forms](https://web3forms.com)** — no backend, no email address in the page. Register **brett@nightcone.com** there, copy the access key they email you, and paste it into `src/pages/contact.astro` in place of `REPLACE_WITH_WEB3FORMS_ACCESS_KEY`. Until then the form says "not configured yet." The key is safe to commit publicly.
 
 ---
 
