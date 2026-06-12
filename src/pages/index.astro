@@ -19,9 +19,9 @@ const score = (n: number | null) => (n === null || n === undefined ? '—' : `${
     <div class="wrap">
       <img class="mk-big" src="/assets/nightcone_square_icon.png" alt="Nightcone Labs" style="mix-blend-mode:multiply" />
       <h1>A field observatory for the dreaming mind.</h1>
-      <p class="lede">Nightcone Labs runs structured, single-variable experiments on oneirogens — compounds reported to alter dreams — and publishes what actually changes. Including the nights nothing does.</p>
+      <p class="lede">Nightcone Labs runs structured, single-variable experiments on oneirogens, which are compounds reported to alter dreams and dream content. We publish what actually changes, including the nights that nothing does.</p>
       <div class="cta-row">
-        <a class="btn solid" href="#matrix">Read the matrix</a>
+        <a class="btn solid" href="#matrix">See the matrix</a>
         <a class="btn ghost" href="#experiments">See the experiments</a>
       </div>
     </div>
@@ -31,7 +31,7 @@ const score = (n: number | null) => (n === null || n === undefined ? '—' : `${
   <section style="padding-top:0">
     <div class="wrap">
       <div class="stats stats-single">
-        <div class="cell"><div class="num">{count}</div><div class="lab">Oneirogens tested</div></div>
+        <a class="cell" href="#matrix" style="text-decoration:none;color:inherit;cursor:pointer"><div class="num">{count}</div><div class="lab">Oneirogens tested</div></a>
       </div>
     </div>
   </section>
