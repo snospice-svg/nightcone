@@ -7,7 +7,18 @@ const all = (await getCollection('experiments')).filter((e) => !e.data.draft);
 all.sort((a, b) => b.data.entry - a.data.entry);
 
 // The "Oneirogens tested" figure is derived from the collection length.
-const count = all.length;
+const matrix = [
+  { entry: 1, substance: 'Silene Capensis', sci: 'Silene Capensis', tradition: 'Ubulawu / Zulu / Xhosa', lucidity: '', dose: '', prep: '', tags: '' },
+  { entry: 2, substance: 'Mexican Dream Herb', sci: 'Calea zacatechichi', tradition: 'Chontal', lucidity: 'Y', dose: '', prep: '', tags: '' },
+  { entry: 3, substance: 'Synaptolepis kirkii', sci: 'Synaptolepis kirkii', tradition: 'Ubulawu / Zulu / Xhosa', lucidity: '', dose: '', prep: '', tags: '' },
+  { entry: 4, substance: 'Mugwort', sci: 'Artemisia vulgaris', tradition: '', lucidity: 'Y', dose: '2g', prep: 'tea, pre-bed', tags: '' },
+  { entry: 5, substance: 'Galantamine', sci: '', tradition: 'Western Medicine', lucidity: 'Y', dose: '8mg', prep: 'WBTB', tags: 'cholinergic' },
+  { entry: 6, substance: 'Huperzine A', sci: '', tradition: 'Eastern Medicine', lucidity: '', dose: '200 and 400mcg', prep: 'WBTB', tags: 'cholinergic' },
+  { entry: 7, substance: 'Blue Lotus', sci: 'Nymphaea caerulea', tradition: 'Egyptian', lucidity: '', dose: '5g', prep: 'tea, pre-bed, WBTB', tags: '' },
+  { entry: 8, substance: 'African Fever Tree', sci: '', tradition: 'Ubulawu / Zulu / Xhosa', lucidity: '', dose: '2g', prep: 'tea, pre-bed, WBTB', tags: '' },
+];
+
+const count = matrix.length;
 
 const pad = (n: number) => String(n).padStart(3, '0');
 const score = (n: number | null) => (n === null || n === undefined ? '—' : `${n}/5`);
@@ -78,28 +89,29 @@ const score = (n: number | null) => (n === null || n === undefined ? '—' : `${
     <div class="wrap">
       <p class="eyebrow">The matrix</p>
       <h2>The central, cumulative artifact.</h2>
-      <p class="muted" style="max-width:62ch">Every compound experiment is a row. Recall and lucidity are scored 0–5 against the experimenter's own baseline — subjective, single-subject, and explicitly so. The matrix is the point; individual videos are just how each row gets reported.</p>
+      <p class="muted" style="max-width:62ch">Every compound tested is a row: substance, scientific name, cultural tradition, dose, preparation, and whether it produced a lucid dream. The matrix is the central, cumulative artifact; individual videos are just how each row gets reported.</p>
       <div class="matrix-shell" style="margin-top:26px">
         <table class="matrix">
           <thead>
-            <tr><th>Entry</th><th>Substance</th><th>Dose</th><th>Protocol</th><th>Recall</th><th>Lucidity</th><th class="notes">Notes</th></tr>
+            <tr><th>Entry</th><th>Substance</th><th>Scientific name</th><th>Cultural tradition</th><th>Lucidity?</th><th>Dose</th><th>Preparation</th><th>Tags</th></tr>
           </thead>
           <tbody>
-            {all.map((e) => (
+            {matrix.map((e) => (
               <tr>
-                <td class="ent">{pad(e.data.entry)}</td>
-                <td><a href={`/experiments/${e.id}/`}>{e.data.title}</a></td>
-                <td set:html={e.data.dose.replace(/ /g, '&nbsp;')} />
-                <td>{e.data.protocol}</td>
-                <td>{score(e.data.recall)}</td>
-                <td>{score(e.data.lucidity)}</td>
-                <td class="notes">{e.data.summary}</td>
+                <td class="ent">{pad(e.entry)}</td>
+                <td>{e.substance}</td>
+                <td>{e.sci || '—'}</td>
+                <td>{e.tradition || '—'}</td>
+                <td>{e.lucidity || '—'}</td>
+                <td>{e.dose || '—'}</td>
+                <td>{e.prep || '—'}</td>
+                <td>{e.tags || '—'}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <p class="matrix-cap">Scores are subjective and single-subject. The matrix grows with every entry.</p>
+      <p class="matrix-cap">Lucidity (Y) marks runs where a lucid dream occurred. The matrix grows with every entry.</p>
     </div>
   </section>
 
