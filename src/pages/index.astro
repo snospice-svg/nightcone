@@ -115,29 +115,6 @@ const score = (n: number | null) => (n === null || n === undefined ? '—' : `${
     </div>
   </section>
 
-  <!-- EXPERIMENTS (generated from experiments) -->
-  <section id="experiments">
-    <div class="wrap">
-      <p class="eyebrow">Experiments in detail</p>
-      <h2>What's been tested, and what it suggested.</h2>
-      <div style="margin-top:30px">
-        {all.map((e) => (
-          <div class="exp">
-            <div class="exp-head">
-              <h3><a href={`/experiments/${e.id}/`}>{e.data.title}</a></h3>
-              {e.data.meta && <span class="meta">{e.data.meta}</span>}
-            </div>
-            <p>{e.data.summary}</p>
-            {e.data.tags.map((t, i) => (
-              <span class={'tag' + (e.data.nullResult && i === 0 ? ' null' : '')}>{t.replace(/-/g, ' ')}</span>
-            ))}
-          </div>
-        ))}
-      </div>
-      <p class="muted" style="margin-top:24px">Full write-ups and the running video record live on the <a href="https://www.youtube.com/@nightcone_labs" target="_blank" rel="noopener">YouTube</a> and <a href="https://www.tiktok.com/@nightcone_labs" target="_blank" rel="noopener">TikTok</a> channels. Each clip is one matrix row, reported as data.</p>
-    </div>
-  </section>
-
   <!-- COMMITMENTS -->
   <section id="commitments">
     <div class="wrap">
